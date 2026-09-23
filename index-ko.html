@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Computer Vision and Pattern Recognition Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2b45;
+    --navy-deep:#12192b;
+    --paper:#f6f4ee;
+    --paper-2:#efece2;
+    --gold:#a9812f;
+    --ink:#232323;
+    --ink-soft:#5b5b53;
+    --line:#d8d3c4;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px); scroll-behavior:smooth;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Gowun Dodum',sans-serif;
+    font-weight:400;
+    line-height:1.75;
+  }
+  h1,h2,h3,.serif{font-family:'Gowun Batang',serif;}
+  img{max-width:100%;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 28px;}
+
+  header{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    background:var(--paper); border-bottom:1px solid var(--line);
+    z-index:10;
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:18px 28px; max-width:960px; margin:0 auto;}
+  .brand{font-family:'Gowun Batang',serif; font-weight:700; font-size:1.05rem; color:var(--navy); letter-spacing:.02em;}
+  .brand span{display:block; font-family:'Gowun Dodum',sans-serif; font-weight:400; font-size:.72rem; color:var(--ink-soft); margin-top:2px;}
+  nav.links{display:flex; gap:28px;}
+  nav.links a{color:var(--ink); text-decoration:none; font-size:.92rem; border-bottom:1px solid transparent; padding-bottom:2px; transition:border-color .2s;}
+  nav.links a:hover, nav.links a:focus-visible{border-color:var(--gold);}
+  nav.links a.lang{color:var(--gold); font-weight:500;}
+
+  .hero{
+    background:var(--navy);
+    color:#efe9da;
+    padding:88px 28px 76px;
+  }
+  .hero-inner{max-width:960px; margin:0 auto;}
+  .hero .eng{font-family:'Gowun Batang',serif; font-weight:700; font-size:clamp(2rem,4.6vw,3rem); line-height:1.3; color:#fff; max-width:12em;}
+  .hero .kor{margin-top:16px; font-size:1.05rem; color:#c9c2ac; font-weight:400;}
+  .hero .desc{margin-top:28px; max-width:38em; font-size:1rem; color:#dcd6c4; font-weight:400; line-height:1.9;}
+  .hero .affil{margin-top:34px; padding-top:22px; border-top:1px solid rgba(255,255,255,.18); font-size:.92rem; color:#a6a086;}
+
+  section{padding:68px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .section-head{display:flex; align-items:baseline; gap:16px; margin-bottom:34px;}
+  .section-head .num{font-family:'Gowun Batang',serif; color:var(--gold); font-size:.95rem;}
+  .section-head h2{margin:0; font-size:1.5rem; color:var(--navy); font-weight:600;}
+
+  .research-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:var(--line); border:1px solid var(--line); margin-top:36px;}
+  .research-grid div{background:var(--paper); padding:26px 24px;}
+  .research-grid h3{margin:0 0 8px; font-size:1rem; color:var(--navy); font-weight:600;}
+  .research-grid p{margin:0; font-size:.9rem; color:var(--ink-soft); line-height:1.7;}
+
+  .profile{display:grid; grid-template-columns:150px 1fr; gap:36px; align-items:start;}
+  .avatar{width:150px; height:150px; background:var(--paper-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:'Gowun Batang',serif; color:var(--gold); font-size:2.2rem; font-weight:600;}
+  .profile h3{margin:0 0 4px; font-size:1.3rem; color:var(--navy); font-weight:700;}
+  .profile h3 .name-email{display:inline-block; margin-left:12px; font-family:'Gowun Dodum',sans-serif; font-size:.78rem; font-weight:400; color:var(--gold); text-decoration:none; border-bottom:1px solid var(--line); vertical-align:middle;}
+  .profile h3 .name-email:hover{border-color:var(--gold);}
+  .profile .role{color:var(--ink-soft); font-size:.92rem; margin-bottom:18px;}
+  .profile dl{display:grid; grid-template-columns:88px 1fr; row-gap:10px; column-gap:14px; font-size:.92rem;}
+  .profile dt{color:var(--gold); font-weight:500;}
+  .profile dd{margin:0; color:var(--ink);}
+
+  .member-group{margin-top:40px;}
+  .member-group:first-child{margin-top:0;}
+  .member-group h3{margin:0 0 2px; font-size:.95rem; color:var(--navy); font-weight:600;}
+  .member-group .count{color:var(--ink-soft); font-size:.78rem; font-weight:400;}
+  .member-list{margin-top:14px; border-top:1px solid var(--line);}
+  .member-item{display:grid; grid-template-columns:100px 110px 1fr; gap:18px; padding:15px 0; border-bottom:1px solid var(--line); align-items:baseline;}
+  .member-item .name{color:var(--ink); font-weight:500; font-size:.94rem;}
+  .member-item .period{color:var(--gold); font-size:.78rem;}
+  .member-item .topic{color:var(--ink-soft); font-size:.86rem; line-height:1.65;}
+
+  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .contact-grid dl{font-size:.95rem;}
+  .contact-grid dt{color:var(--gold); font-size:.8rem; margin-top:18px;}
+  .contact-grid dt:first-child{margin-top:0;}
+  .contact-grid dd{margin:4px 0 0; color:var(--ink);}
+  .contact-grid a{color:var(--navy); text-decoration:none; border-bottom:1px solid var(--line);}
+
+  footer{background:var(--navy-deep); color:#8d8871; text-align:center; padding:26px 28px; font-size:.82rem;}
+
+  @media (max-width:640px){
+    .nav{flex-direction:column; align-items:flex-start; gap:12px;}
+    nav.links{gap:18px; flex-wrap:wrap;}
+    .research-grid{grid-template-columns:1fr;}
+    .profile{grid-template-columns:1fr; text-align:left;}
+    .member-item{grid-template-columns:1fr; gap:4px; row-gap:4px;}
+    .contact-grid{grid-template-columns:1fr;}
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#15161a; --paper-2:#1c1e24; --ink:#e7e4da; --ink-soft:#a9a596; --line:#33352f; --navy:#e7e4da; --navy-deep:#0c0d10;
+    }
+    :root:not([data-theme="light"]) .hero{background:#0c0d10;}
+    :root:not([data-theme="light"]) .hero .eng{color:#f4f1e6;}
+    :root:not([data-theme="light"]) .avatar{color:#c9a227;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">CVPR Lab<span>충북대학교 소프트웨어학부</span></div>
+    <nav class="links">
+      <a href="#about">소개</a>
+      <a href="#research">연구분야</a>
+      <a href="#professor">교수소개</a>
+      <a href="#members">소속연구원</a>
+      <a href="#contact">연락처</a>
+      <a href="index.html" class="lang">EN</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="eng">Computer Vision and&nbsp;Pattern Recognition Lab</h1>
+    <p class="kor">컴퓨터 비전 및 패턴인식 연구실</p>
+    <p class="desc">CVPR 연구실은 이미지와 비디오의 시각 정보를 효율적으로 표현하고 이해하는 컴퓨터 비전 및 멀티모달 AI 기술을 연구하며, 비디오 지능, 지능형 감시, 의료영상 및 산업 비전 분야에 이를 적용합니다.</p>
+    <p class="affil">충북대학교 소프트웨어학부 · 지도교수 Kyung Joo Cheoi</p>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head"><span class="num">01</span><h2>연구실 소개</h2></div>
+    <p style="max-width:42em; color:var(--ink-soft);">CVPR 연구실은 시각 데이터를 정확하고 효율적으로 해석하는 알고리즘 연구를 통해, 실세계 문제 해결에 기여하는 컴퓨터 비전 기술을 개발합니다. 이미지·영상 인식의 기초 이론부터 응용 시스템 구축까지 폭넓은 연구를 수행하며, 산업체 및 의료기관과의 협업을 통해 연구 성과의 실질적인 활용을 지향합니다.</p>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <div class="section-head"><span class="num">02</span><h2>연구 분야</h2></div>
+    <div class="research-grid">
+      <div><h3>비디오 지능</h3><p>영상 속 행동과 상황을 이해하고 분석하는 비디오 이해 기술을 연구합니다.</p></div>
+      <div><h3>지능형 감시</h3><p>실시간 영상 분석을 통한 이상 탐지 및 지능형 감시 시스템을 개발합니다.</p></div>
+      <div><h3>의료영상 분석</h3><p>딥러닝 기반 의료 영상 판독·진단 보조 기술을 연구합니다.</p></div>
+      <div><h3>산업 비전</h3><p>제조 및 산업 현장에 적용 가능한 자동 검사·인식 기술을 연구합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="professor">
+  <div class="wrap">
+    <div class="section-head"><span class="num">03</span><h2>지도교수 소개</h2></div>
+    <div class="profile">
+      <div class="avatar">K</div>
+      <div>
+        <h3>Kyung Joo Cheoi 교수 <a href="mailto:kjcheoi@chungbuk.ac.kr" class="name-email">kjcheoi@chungbuk.ac.kr</a></h3>
+        <p class="role">충북대학교 소프트웨어학부</p>
+        <dl>
+          <dt>학력</dt><dd>연세대학교 컴퓨터과학과 박사 (2002)</dd>
+          <dt>경력</dt><dd>충북대학교 소프트웨어학부 교수 (2005 ~ 현재)</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="members">
+  <div class="wrap">
+    <div class="section-head"><span class="num">04</span><h2>소속 연구원</h2></div>
+
+    <div class="member-group">
+      <h3>박사</h3>
+      <div class="member-list">
+        <div class="member-item">
+          <span class="name">전민성</span>
+          <span class="period">2026.6 졸업</span>
+          <span class="topic">고정 카메라 비디오 이해를 위한 의미적 시간 표현으로서의 잔상</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="member-group">
+      <h3>석사과정</h3>
+      <div class="member-list">
+        <div class="member-item">
+          <span class="name">최유진</span>
+          <span class="period">2026.3~</span>
+          <span class="topic">산불 특화 경량 객체 탐지 모델 개발</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="member-group">
+      <h3>학부생 인턴</h3>
+      <div class="member-list">
+        <div class="member-item">
+          <span class="name">송동선</span>
+          <span class="period">2026.3~</span>
+          <span class="topic">산불 탐지에서 하드 네거티브 학습과 신뢰도 보정 후단 검증을 이용한 오탐 억제</span>
+        </div>
+        <div class="member-item">
+          <span class="name">최소정</span>
+          <span class="period">2026.5~</span>
+          <span class="topic">복잡한 시각 환경에서 Affordance Grounding의 강건성 평가와 추론비용 무증가 학습</span>
+        </div>
+        <div class="member-item">
+          <span class="name">양인규</span>
+          <span class="period">2026.5~</span>
+          <span class="topic">HVI Intensity 기반 전역 노출 안정화를 결합한 프레임 단위 HVI-CIDNet 저조도 비디오 개선</span>
+        </div>
+        <div class="member-item">
+          <span class="name">이나연</span>
+          <span class="period">2026.9~</span>
+          <span class="topic">새로운 시공간통합표현체</span>
+        </div>
+        <div class="member-item">
+          <span class="name">김문기</span>
+          <span class="period">2026.9~</span>
+          <span class="topic">&nbsp;</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head"><span class="num">05</span><h2>연락처 · 오시는 길</h2></div>
+    <div class="contact-grid">
+      <dl>
+        <dt>이메일</dt><dd><a href="mailto:kjcheoi@chungbuk.ac.kr">kjcheoi@chungbuk.ac.kr</a></dd>
+        <dt>소속</dt><dd>충북대학교 소프트웨어학부</dd>
+      </dl>
+      <dl>
+        <dt>주소</dt><dd>충청북도 청주시 서원구 충대로 1 충북대학교</dd>
+        <dt>연구실</dt><dd>Computer Vision and Pattern Recognition Lab</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Computer Vision and Pattern Recognition Lab, Chungbuk National University</footer>
+
+</body>
+</html>
